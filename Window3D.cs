@@ -8,19 +8,28 @@ namespace Miriuta
 {
     class Window3D : GameWindow
     {
-        bool showCube = true;
+        Triangle tr;
         KeyboardState lastKeyPress;
-        float X = 0, Y = 0;
-        public Window3D() : base(800, 400)
+        Randomizer r;
+        Axes axes;
+       
+        public Window3D() : base(800, 600)
         {
             VSync = VSyncMode.On;
+
+            r = new Randomizer();
+            tr = new Triangle(r);
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            GL.ClearColor(Color.Black);
+            GL.ClearColor(Color.Azure);
+
+            //tr = new Triangle(r);
+
+            axes = new Axes();
         }
         protected override void OnResize(EventArgs e)
         {
@@ -42,34 +51,22 @@ namespace Miriuta
         {
             base.OnUpdateFrame(e);
             KeyboardState keyboard = OpenTK.Input.Keyboard.GetState();
-            MouseState mouse = OpenTK.Input.Mouse.GetState();
+            
             if (keyboard[OpenTK.Input.Key.Escape])
             {
                 Exit();
                 return;
-            } //rezolvare problema 2 din laboratorul 2
-            else if (keyboard[OpenTK.Input.Key.A] && keyboard[OpenTK.Input.Key.D] && !keyboard.Equals(lastKeyPress)) // tastele A & D
-            {
-                if (showCube == true)
-                {
-                    showCube = false;
-                }
-                else
-                {
-                    showCube = true;
-                }
             }
-            else if (mouse.X != X && mouse.Y != Y)//mouse
+
+            if (keyboard[Key.T] && !keyboard.Equals(lastKeyPress))
             {
-                showCube = false;
-                X = mouse.X;
-                Y = mouse.Y;
+                tr.DiscoMode();
+                tr.ShowColors();
+
             }
-            else
-            {
-                showCube = true;
-            }
-            lastKeyPress = keyboard;
+
+
+                lastKeyPress = keyboard;
         }
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -79,57 +76,14 @@ namespace Miriuta
             Matrix4 lookat = Matrix4.LookAt(15, 50, 15, 0, 0, 0, 0, 1, 0);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref lookat);
-            if (showCube == true)
-            {
-                DrawCube();
+            
 
-            }
+            axes.DrawMe();
+            tr.Draw();
 
             SwapBuffers();
         }
-        private void DrawCube()
-        {
-            GL.Begin(PrimitiveType.Quads);
-
-            GL.Color3(Color.AliceBlue);
-            GL.Vertex3(-2.0f, -2.0f, -2.0f);
-            GL.Vertex3(-2.0f, 2.0f, -2.0f);
-            GL.Vertex3(2.0f, 2.0f, -2.0f);
-            GL.Vertex3(2.0f, -2.0f, -2.0f);
-
-            GL.Color3(Color.Honeydew);
-            GL.Vertex3(-2.0f, -2.0f, -2.0f);
-            GL.Vertex3(2.0f, -2.0f, -2.0f);
-            GL.Vertex3(2.0f, -2.0f, 2.0f);
-            GL.Vertex3(-2.0f, -2.0f, 2.0f);
-
-            GL.Color3(Color.Moccasin);
-
-            GL.Vertex3(-2.0f, -2.0f, -2.0f);
-            GL.Vertex3(-2.0f, -2.0f, 2.0f);
-            GL.Vertex3(-2.0f, 2.0f, 2.0f);
-            GL.Vertex3(-2.0f, 2.0f, -2.0f);
-
-            GL.Color3(Color.IndianRed);
-            GL.Vertex3(-2.0f, -2.0f, 2.0f);
-            GL.Vertex3(2.0f, -2.0f, 2.0f);
-            GL.Vertex3(2.0f, 2.0f, 2.0f);
-            GL.Vertex3(-2.0f, 2.0f, 2.0f);
-
-            GL.Color3(Color.Azure);
-            GL.Vertex3(-2.0f, 2.0f, -2.0f);
-            GL.Vertex3(-2.0f, 2.0f, 2.0f);
-            GL.Vertex3(2.0f, 2.0f, 2.0f);
-            GL.Vertex3(2.0f, 2.0f, -2.0f);
-
-            GL.Color3(Color.Aquamarine);
-            GL.Vertex3(2.0f, -2.0f, -2.0f);
-            GL.Vertex3(2.0f, 2.0f, -2.0f);
-            GL.Vertex3(2.0f, 2.0f, 2.0f);
-            GL.Vertex3(2.0f, -2.0f, 2.0f);
-
-            GL.End();
-        }
+        
 
 
 
