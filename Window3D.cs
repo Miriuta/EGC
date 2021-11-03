@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -8,17 +8,20 @@ namespace Miriuta
 {
     class Window3D : GameWindow
     {
-        Triangle tr;
+        Cube c;
         KeyboardState lastKeyPress;
         Randomizer r;
         Axes axes;
+        
+        
        
         public Window3D() : base(800, 600)
         {
             VSync = VSyncMode.On;
 
             r = new Randomizer();
-            tr = new Triangle(r);
+            c = new Cube();
+            DisplayHelp();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -27,7 +30,7 @@ namespace Miriuta
 
             GL.ClearColor(Color.Azure);
 
-            //tr = new Triangle(r);
+            
 
             axes = new Axes();
         }
@@ -58,15 +61,25 @@ namespace Miriuta
                 return;
             }
 
-            if (keyboard[Key.T] && !keyboard.Equals(lastKeyPress))
+            if (keyboard[Key.A] && !keyboard.Equals(lastKeyPress))
             {
-                tr.DiscoMode();
-                tr.ShowColors();
+                c.ToggleColor(r, 2);
+                c.ShowColors();
 
+            }
+            if (keyboard[Key.S] && !keyboard.Equals(lastKeyPress))
+            {
+                c.ToggleColor(r, 3);
+                c.ShowColors();
+            }
+            if (keyboard[Key.D] && !keyboard.Equals(lastKeyPress))
+            {
+                c.ToggleColor(r, 5);
+                c.ShowColors();
             }
 
 
-                lastKeyPress = keyboard;
+            lastKeyPress = keyboard;
         }
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -79,11 +92,27 @@ namespace Miriuta
             
 
             axes.DrawMe();
-            tr.Draw();
+            //rezolvare ex1 lab4
+            //c.DrawCube();
+
+            //rezolvare ex2 lab4
+            c.DrawCubeTriangle();
+            
 
             SwapBuffers();
+
+
         }
-        
+
+        private void DisplayHelp()
+        {
+            Console.WriteLine("\n      MENIU");
+            Console.WriteLine(" (A,S,D) - schimbare valori RGB");
+            Console.WriteLine(" (ESC) - parasire aplicatie");
+
+        }
+
+
 
 
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Miriuta
 {
+    //rezolvare ex3 lab4
      class Randomizer
     {
 
